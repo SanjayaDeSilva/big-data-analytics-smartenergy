@@ -1317,7 +1317,7 @@ Retry2:
 //		char* new_request = (char *)malloc(sizeof(char) * (sizeof(request) + 1));
 //        strcpy(new_request, request);
 //        new_request[sizeof(new_request) - 1] = '\n';
-		//printf("++++++>%s<+++++\r\n", request);
+//		  printf("++++++>%s<+++++\r\n", request);
 
 
 		char1024 outbuffer;
@@ -1353,6 +1353,8 @@ Retry2:
 		char line[4096];
 //		request[sizeof(request) - 1] = '\n';
 		char delimiter = '\n';
+		char* outbuffer2 = (char*)malloc(1024);
+		outbuffer2[0] = '\0';
 		while(pch != NULL){
 			iPtr++;
 //			printf("found at %d\r\n", pch-request+1);
@@ -1405,17 +1407,20 @@ Retry2:
 							//printf("===>>>%s<<<===\r\n", token);
 
 							//send_data(sd, token, strlen(token));
-							char1024 outbuffer2;
-							strcat(outbuffer2, token);
-							strcat(outbuffer2, "\r\n");
+							//char1024 outbuffer2;
 
-							if ( write(sd, outbuffer2,strlen(outbuffer2)) < 0 )
+							strcat(outbuffer2, token);
+							//strcat(outbuffer2, "\r\n");
+							strcat(outbuffer2, " ");
+
+/*							if ( write(sd, outbuffer2,strlen(outbuffer2)) < 0 )
 							{
 								printf("Unable to send request.\r\n");
-							}
+							}*/
 
 							strcat(outbuffer, token);
-							//printf("%s\r\n", outbuffer);
+
+							//memset(outbuffer2, 0, sizeof(outbuffer2));
 							//system(outbuffer);
 						}
 
@@ -1429,6 +1434,14 @@ Retry2:
 			}
 			pch = pch + 1;
 		}
+
+		strcat(outbuffer2, "\r\n");
+		//printf("-->|%s|<--\r\n", outbuffer2);
+		if ( write(sd, outbuffer2,strlen(outbuffer2)) < 0 )
+		{
+			printf("Unable to send request.\r\n");
+		}
+		memset(outbuffer2, 0, sizeof(outbuffer2));
 		//printf("-----------------------------------\r\n");
 		//printf("sent the info.\r\n");
 		//------------------------------------------------------------
